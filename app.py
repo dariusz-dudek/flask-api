@@ -1,9 +1,14 @@
 from flask import Flask
-from api import authors
+from api.authors import authors_add, authors_delete, authors_index
+from api.books import books_index, books_add, books_delete
 
 app = Flask(__name__)
 
 
-app.add_url_rule('/authors', view_func=authors.index, methods=['GET'])
-app.add_url_rule('/authors', view_func=authors.add, methods=['POST'])
-app.add_url_rule('/authors/<author_id>', view_func=authors.delete, methods=['DELETE'])
+app.add_url_rule('/authors', view_func=authors_index, methods=['GET'])
+app.add_url_rule('/authors', view_func=authors_add, methods=['POST'])
+app.add_url_rule('/authors/<author_id>', view_func=authors_delete, methods=['DELETE'])
+
+app.add_url_rule('/books', view_func=books_index, methods=['GET'])
+app.add_url_rule('/books', view_func=books_add, methods=['POST'])
+app.add_url_rule('/books/<book_id>', view_func=books_delete, methods=['DELETE'])
