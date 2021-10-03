@@ -12,6 +12,13 @@ class BooksRepository:
         self.cursor.execute('SELECT id, title, author_id FROM app.public.books')
         return self.cursor.fetchall()
 
+    def get(self, book_id):
+        self.cursor.execute(
+            'SELECT id, title, author_id FROM app.public.books WHERE id=%s',
+            (book_id,)
+        )
+        return self.cursor.fetchone()
+
     def add(self, title, author_id):
         self.cursor.execute(
             'INSERT INTO app.public.books (title, author_id) VALUES (%s, %s) returning id',
@@ -21,14 +28,6 @@ class BooksRepository:
         return book_id
 
     def delete(self, book_id):
-        self.cursor.execute(
-            'SELECT id, title, author_id FROM app.public.books WHERE id=%s',
-            (book_id,)
-        )
-        book = self.cursor.fetchone()
-        if book is None:
-            return abort(404)
         self.cursor.execute('DELETE FROM app.public.books WHERE id=%s', (book_id,))
         self.connection.commit()
-        return 'ok'
 

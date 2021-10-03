@@ -1,5 +1,5 @@
 from repositories.books import BooksRepository
-from flask import Response, request
+from flask import Response, request, abort
 from json import dumps, loads
 
 
@@ -19,8 +19,11 @@ def books_add():
 
 def books_delete(book_id):
     repository = BooksRepository()
-    book = repository.delete(book_id)
+    book = repository.get(book_id)
+    if book is None:
+        return abort(404)
+    repository.delete(book_id)
 
     return Response(dumps({
-        'status': book
+        'status': 'ok'
     }), mimetype='application/json')

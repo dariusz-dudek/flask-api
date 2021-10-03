@@ -1,4 +1,4 @@
-from flask import Response, request
+from flask import Response, request, abort
 from repositories.authors import AuthorsRepository
 from json import dumps, loads
 
@@ -20,11 +20,12 @@ def authors_add():
 
 def authors_delete(author_id):
     repository = AuthorsRepository()
-    status = repository.delete(author_id)
+    author = repository.get(author_id)
 
-    if status == 'ok':
-        return Response(dumps({
-            'status': status
-        }), mimetype='application/json', status=200)
+    if author is None:
+        return abort(404)
+    repository.delete(author_id)
 
-    return status
+    return Response(dumps({
+        'status': 'ok'
+    }), mimetype='application/json', status=200)
