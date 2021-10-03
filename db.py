@@ -2,6 +2,10 @@ import psycopg2
 from flask import g
 
 
+def init_app(app):
+    app.teardown_appcontext(close_connection)
+
+
 def get_connection():
     if 'connection' not in g:
         g.connection = psycopg2.connect(
@@ -11,4 +15,8 @@ def get_connection():
 
 
 def close_connection():
-    connection = g.pop('')
+    connection = g.pop('connection', None)
+
+    if connection is not None:
+        connection.close()
+

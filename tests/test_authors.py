@@ -13,10 +13,10 @@ def test_add_author():
         'first_name': 'Grzegorz',
         'last_name': 'Brzęczyszczykiewicz'
     }
-    response = requests.post('http://localhost:5000/authors', payload)
+    response = requests.post('http://localhost:5000/authors', json=payload)
     assert response.status_code == 201
 
-    response = requests.post('http://localhost:5000/authors', payload)
+    response = requests.get('http://localhost:5000/authors')
     data = response.json()
     assert data[-1]['first_name'] == 'Grzegorz'
     assert data[-1]['last_name'] == 'Brzęczyszczykiewicz'
@@ -30,7 +30,8 @@ def test_delete_author():
     quantity = len(data)
     last_id = data[-1]['id']
 
-    requests.delete(f'http://localhost:5000/authors/<{last_id}>')
+    requests.delete(f'http://localhost:5000/authors/{last_id}')
+
     response = requests.get('http://localhost:5000/authors')
     data = response.json()
     new_quantity = len(data)
