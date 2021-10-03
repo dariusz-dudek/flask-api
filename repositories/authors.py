@@ -21,9 +21,9 @@ class AuthorsRepository:
             'INSERT INTO authors (first_name, last_name) VALUES (%s, %s) RETURNING id',
             (first_name, last_name)
         )
-        author_id = self.cursor.fetchone()['id']
+        author_id = self.cursor.fetchone()
         self.connection.commit()
-        return author_id
+        return author_id['id']
 
     def delete(self, author_id):
         self.cursor.execute('DELETE FROM authors WHERE id=%s', (author_id,))

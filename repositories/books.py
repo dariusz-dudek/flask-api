@@ -1,6 +1,5 @@
 from db import get_connection
 from psycopg2 import extras
-from flask import abort
 
 
 class BooksRepository:
@@ -23,11 +22,10 @@ class BooksRepository:
         self.cursor.execute(
             'INSERT INTO app.public.books (title, author_id) VALUES (%s, %s) returning id',
             (title, author_id))
-        book_id = self.cursor.fetchone()['id']
+        book_id = self.cursor.fetchone()
         self.connection.commit()
-        return book_id
+        return book_id['id']
 
     def delete(self, book_id):
         self.cursor.execute('DELETE FROM app.public.books WHERE id=%s', (book_id,))
         self.connection.commit()
-

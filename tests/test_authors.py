@@ -22,6 +22,14 @@ def test_add_author():
     assert data[-1]['last_name'] == 'Brzęczyszczykiewicz'
 
 
+def test_add_wrong_author():
+    payload = {
+        'last_name': 'Brzęczyszczykiewicz'
+    }
+    response = requests.post('http://localhost:5000/authors', json=payload)
+    assert response.status_code == 400
+
+
 # Czy po usunięciu autora mam o jednego autora mniej
 
 def test_delete_author():

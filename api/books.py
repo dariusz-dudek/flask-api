@@ -1,6 +1,8 @@
 from repositories.books import BooksRepository
 from flask import Response, request, abort
+from pydantic import ValidationError
 from json import dumps, loads
+from models import Book
 
 
 def books_index():
@@ -9,12 +11,20 @@ def books_index():
 
 
 def books_add():
-    data = loads(request.data.decode('utf-8'))
     repository = BooksRepository()
-    book_id = repository.add(data['title'], data['author_id'])
-    return Response(dumps({
-        'id': book_id
-    }), mimetype='application/json', status=201)
+    data = loads(request.data.decode('utf-8'))
+    try:
+        book = Book(**data)
+        book_id = repository.add(book.title, book.author_id)
+        return Response(dumps({
+            'id': book_id
+        }), mimetype='application/json', status=201)
+    except ValidationError as error:
+        return Response(
+            error.json(),
+            mimetype='application/json',
+            status=400
+        )
 
 
 def books_delete(book_id):

@@ -1,6 +1,8 @@
-from flask import Response, request, abort
 from repositories.authors import AuthorsRepository
+from flask import Response, request, abort
+from pydantic import ValidationError
 from json import dumps, loads
+from models import Author
 
 
 def authors_index():
@@ -9,13 +11,23 @@ def authors_index():
 
 
 def authors_add():
-    data = loads(request.data.decode('utf-8'))
     repository = AuthorsRepository()
-    author_id = repository.add(data['first_name'], data['last_name'])
+    data = loads(request.data.decode('utf-8'))
+    try:
+        author = Author(**data)
 
-    return Response(dumps({
-        'id': author_id
-    }), mimetype='application/json', status=201)
+        author_id = repository.add(author.first_name, author.last_name)
+
+        return Response(dumps({
+            'id': author_id
+        }), mimetype='application/json', status=201)
+
+    except ValidationError as error:
+        return Response(
+            error.json(),
+            mimetype='application/json',
+            status=400
+        )
 
 
 def authors_delete(author_id):
