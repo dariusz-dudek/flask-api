@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block intro %}
+    To jest rejestracja
+{% endblock %}
+{% block content %}
+    <h1>Rejestracja</h1>
+    <form method="POST" action="/register">
+        <div>
+            <label>{{ form.username.label }}</label>
+            {{ form.username() }}
+            {% if form.username.errors %}
+                {% for error in form.username.errors %}
+                    <div>
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div>
+            <label>{{ form.password.label }}</label>
+            {{ form.password() }}
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                    <div>
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div>
+            <label>{{ form.password_repeat.label }}</label>
+            {{ form.password_repeat() }}
+            {% if form.password_repeat.errors %}
+                {% for error in form.password_repeat.errors %}
+                    <div>
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <button type="submit">Zarejestruj</button>
+    </form>
+{% endblock %}
