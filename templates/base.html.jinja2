@@ -5,6 +5,13 @@
     <title>Base</title>
 </head>
 <body>
+    {% if current_user.is_authenticated %}
+        <div>
+            Witaj {{ current_user.username }}
+        <a href="/logout">Wyloguj</a>
+        </div>
+    {% endif %}
+
     {% block intro %} To jest wstęp {% endblock %}
     {% block content %}
 

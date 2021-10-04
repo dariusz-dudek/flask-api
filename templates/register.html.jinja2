@@ -1,7 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'base.html.jinja2' %}
+{% block intro %}
+    To jest rejestracja
+{% endblock %}
 {% block content %}
-    <h1>Logowanie</h1>
-    <form method="POST" action="/login">
+    <h1>Rejestracja</h1>
+    <form method="POST" action="/register">
         <div>
             <label>{{ form.username.label }}</label>
             {{ form.username() }}
@@ -24,6 +27,17 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <button type="submit">Zaloguj</button>
+        <div>
+            <label>{{ form.password_repeat.label }}</label>
+            {{ form.password_repeat() }}
+            {% if form.password_repeat.errors %}
+                {% for error in form.password_repeat.errors %}
+                    <div>
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <button type="submit">Zarejestruj</button>
     </form>
 {% endblock %}

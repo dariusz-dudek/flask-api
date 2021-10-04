@@ -1,7 +1,8 @@
+from flask import render_template, request, abort, redirect
+from flask_login import login_user, logout_user, login_required
 from repositories.users import UsersRepository
-from flask import render_template, request
-from hashlib import pbkdf2_hmac
 from forms import RegisterForm, LoginForm
+from hashlib import pbkdf2_hmac
 
 
 def login():
@@ -12,11 +13,23 @@ def login():
 
         repository = UsersRepository()
         user = repository.get_by_username(username)
-        print(user['password'])
-        print(crypted_password)
-        quit()
+        if user.password == crypted_password:
+            login_user(user)
+            return redirect('/home')
+        else:
+            abort(400)
 
-    return render_template('login.html', form=form)
+    return render_template('login.html.jinja2', form=form)
+
+
+def logout():
+    logout_user()
+    return redirect('/login')
+
+
+@login_required
+def home():
+    return render_template('home.html.jinja2')
 
 
 def register():
@@ -27,7 +40,7 @@ def register():
 
         repository = UsersRepository()
         repository.add(username, password)
-    return render_template('register.html', form=form)
+    return render_template('register.html.jinja2', form=form)
 
 
 def crypt_password(password):
